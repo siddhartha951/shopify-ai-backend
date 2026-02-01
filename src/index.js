@@ -8,6 +8,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const healthRoutes = require('./routes/health');
+const shopifyWebhookRoutes = require('./routes/shopifyWebhook');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
@@ -37,13 +38,17 @@ app.use(express.urlencoded({ extended: true }));
 // Health check endpoint
 app.use('/health', healthRoutes);
 
+// Shopify webhook endpoint
+app.use('/webhooks', shopifyWebhookRoutes);
+
 // Root endpoint
 app.get('/', (req, res) => {
   res.json({
     message: 'Shopify AI Backend - Phase 1',
     version: '1.0.0',
     endpoints: {
-      health: '/health'
+      health: '/health',
+      webhooks: '/webhooks/products'
     }
   });
 });
