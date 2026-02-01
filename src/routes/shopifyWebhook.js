@@ -2,6 +2,9 @@
  * Shopify Webhook Route
  * POST /webhooks/products
  * Handles: products/create, products/update, products/delete
+ * 
+ * IMPORTANT: Must complete DB operation BEFORE sending response
+ * because Vercel terminates function after response is sent.
  */
 
 const express = require('express');
@@ -22,10 +25,7 @@ router.post('/products', async (req, res) => {
     console.log('Product Title:', payload.title);
     console.log('Timestamp:', new Date().toISOString());
 
-    // Return 200 immediately (Shopify expects quick response)
-    res.status(200).json({ received: true });
-
-    // Process webhook - AWAIT the database operation
+    // Process webhook FIRST, then send response
     try {
         let result = null;
 
@@ -41,8 +41,11 @@ router.post('/products', async (req, res) => {
 
         console.log('═══════════════════════════════════════');
         console.log('✅ Webhook processing complete');
-        console.log('Result:', result ? 'Data saved' : 'No data returned');
+        console.log('Result:', JSON.stringify(result));
         console.log('═══════════════════════════════════════');
+
+        // Send success response AFTER operation completes
+        res.status(200).json({ received: true, success: true });
 
     } catch (error) {
         console.log('═══════════════════════════════════════');
@@ -50,6 +53,10 @@ router.post('/products', async (req, res) => {
         console.error('Error:', error.message);
         console.error('Product ID:', payload.id);
         console.log('═══════════════════════════════════════');
+
+        // Still return 200 to Shopify (so it doesn't retry)
+        // but log the failure
+        res.status(200).json({ received: true, success: false, error: error.message });
     }
 });
 
