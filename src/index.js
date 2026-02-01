@@ -9,6 +9,7 @@ const express = require('express');
 const cors = require('cors');
 const healthRoutes = require('./routes/health');
 const shopifyWebhookRoutes = require('./routes/shopifyWebhook');
+const chatRoutes = require('./routes/chat');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
@@ -41,6 +42,9 @@ app.use('/health', healthRoutes);
 // Shopify webhook endpoint
 app.use('/webhooks', shopifyWebhookRoutes);
 
+// AI Chat endpoint
+app.use('/chat', chatRoutes);
+
 // Root endpoint
 app.get('/', (req, res) => {
   res.json({
@@ -48,7 +52,8 @@ app.get('/', (req, res) => {
     version: '1.0.0',
     endpoints: {
       health: '/health',
-      webhooks: '/webhooks/products'
+      webhooks: '/webhooks/products',
+      chat: '/chat'
     }
   });
 });
