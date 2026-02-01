@@ -1,0 +1,28 @@
+{
+  "name": "shopify-ai-backend",
+  "version": "1.0.0",
+  "description": "Phase-1 backend foundation for Shopify + AI agent system",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "node src/index.js",
+    "start": "node src/index.js",
+    "vercel-dev": "vercel dev"
+  },
+  "keywords": [
+    "shopify",
+    "ai",
+    "backend",
+    "express",
+    "vercel"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
